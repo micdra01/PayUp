@@ -44,3 +44,9 @@ public class GroupCardModel : Group
 {
     public decimal Amount { get; set; }
 }
+
+public class GroupInfo
+{
+    public int GroupId { get; set; }
+    public string Name { get; set; }
+}

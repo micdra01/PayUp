@@ -102,4 +102,14 @@ public class UsersController : ControllerBase
         return _service.GetInvitableUsers(data, invitableUserSearch);
     }
     
+    [RequireAuthentication]
+    [HttpGet]
+    [Route("/api/user/fulluserinfo")]
+    public User GetFullUser([FromQuery] int userId)
+    {
+        SessionData? data = HttpContext.GetSessionData();
+        var user = _service.GetFullUser(data!.UserId, userId);
+        return user;
+    }
+    
 }

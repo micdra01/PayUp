@@ -55,4 +55,21 @@ public class UserService
         if (!wasDeleted) throw new SqlNullValueException(" delete user");//checks if response is true before returning it.
         return wasDeleted; 
     }
+
+    public User? GetFullUser(int loggedInUser, int userId)
+    {
+        //todo check if two users are in a group together
+        //todo if they are not, throw not auth exception
+        //todo if they are get the full user and return
+        
+        //todo could be cool to send this with the object so we can get a list of where users are in a group together
+        var listOfCommonGroups = _groupRepository.GetCommonGroupsInfo(loggedInUser, userId);//gets all the groups where both users are members.
+
+        if (listOfCommonGroups.Count > 0)
+        {
+            return _userRepository.GetById(userId);
+        }
+        throw new SecurityException("you can not view this users profile");
+
+    }
 }

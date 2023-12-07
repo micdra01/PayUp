@@ -249,4 +249,28 @@ WHERE group_invitation.receiver_id = @receiverId
         using var connection = _dataSource.OpenConnection();
         return connection.QueryFirst<Group>(sql, new { groupId, model.Name, model.Description, imageUrl });
     }
+    
+    public List<GroupInfo> GetCommonGroupsInfo(int userId1, int userId2)
+    {
+        string query = @"
+        SELECT gm1.group_id, g.name
+        FROM groups.group_members AS gm1
+        INNER JOIN groups.group_members AS gm2 ON gm1.group_id = gm2.group_id
+        INNER JOIN groups.group AS g ON gm1.group_id = g.id
+        WHERE gm1.user_id = @UserId1 AND gm2.user_id = @UserId2";
+
+        try
+        {
+            using (var conn = _dataSource.OpenConnection())
+            {
+                var result = conn.Query<GroupInfo>(query, new { UserId1 = userId1, UserId2 = userId2 });
+
+                return result.ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new SqlTypeException("", ex);
+        }
+    }
 }
