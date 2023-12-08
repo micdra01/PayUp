@@ -82,4 +82,7 @@ public class NotificationRepository
             throw new SqlTypeException("Failed to update user notification settings", e);
         }
     }
+    
+    
+    
 }

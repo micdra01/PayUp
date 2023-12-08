@@ -196,6 +196,26 @@ CREATE TABLE users.user_notification_settings (
     expense_notification_email BOOLEAN NOT NULL
 );
 
+-- Create the 'notifications' schema
+CREATE SCHEMA notifications;
+
+-- Create the 'notifications.notification_type' enum
+CREATE TYPE notifications.notification_type AS ENUM (
+    'GROUP_INVITATION',
+    'EXPENSE_ADDED',
+    'EXPENSE_SETTLED'
+);
+
+-- Create the 'notifications.notification' table
+CREATE TABLE notifications.notification (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    notification_type notifications.notification_type NOT NULL,
+    source_id INT NOT NULL,
+    created_date TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES users.user(id)
+);
  ";
 
     public static string NoResponseMessage = $@"
