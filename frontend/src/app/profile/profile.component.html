@@ -101,14 +101,20 @@
     </div>
 
     <div id="stats" class="item, container">
-      <ion-card id="statsCard">
+      <ion-card id="statsCard" >
         <p>
-          money stats baby
+          <ion-card-title class="medium-text" *ngIf="totalBalance.amount < 0" color="danger"> Total balance: {{-1 * totalBalance.amount}}  </ion-card-title>
+          <ion-card-title class="medium-text" *ngIf="totalBalance.amount > 0" color="success"> Total balance: {{totalBalance.amount}}  </ion-card-title>
         </p>
-        <ion-button class="btn" fill="clear" color="warning" *ngIf="!editMode">
+
+        <ion-button class="btn" fill="clear" color="warning" *ngIf="!editMode"></ion-button>
+
+
+        <ion-button class="btn" fill="clear" color="warning"  *ngIf="!editMode">
           <ion-icon slot="icon-only" name="create" size="medium"></ion-icon>
         </ion-button>
       </ion-card>
+
     </div>
   </div>
   <ng-template #loading>

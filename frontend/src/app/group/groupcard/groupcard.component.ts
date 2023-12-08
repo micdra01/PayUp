@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Group, GroupCard} from "../group.service";
+import {GroupCard} from "../group.service";
 import {Router} from "@angular/router";
-import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-groupcard',

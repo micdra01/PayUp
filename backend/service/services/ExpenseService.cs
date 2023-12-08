@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Security.Authentication;
+﻿using System.Security.Authentication;
 using api.models;
 using infrastructure.dataModels;
 using infrastructure.repository;
@@ -11,14 +10,18 @@ public class ExpenseService
     private readonly GroupRepository _groupRepo;
     private readonly ExpenseRepository _expenseRepo;
     private readonly UserRepository _userRepository;
+    private readonly CurrencyApiRepository _currencyApiRepository;
     private readonly TransactionCalculator _calculator;
 
-    public ExpenseService(GroupRepository groupRepo, ExpenseRepository expenseRepo, UserRepository userRepo, TransactionCalculator calculator)
+    public ExpenseService(GroupRepository groupRepo, ExpenseRepository expenseRepo, UserRepository userRepo, TransactionCalculator calculator, CurrencyApiRepository currencyApiRepository)
+
     {
         _groupRepo = groupRepo;
         _expenseRepo = expenseRepo;
         _userRepository = userRepo;
         _calculator = calculator;
+        _currencyApiRepository = currencyApiRepository;
+
     }
 
     public FullExpense CreateExpense(CreateFullExpense createFullExpense, SessionData sessionData)
@@ -26,13 +29,28 @@ public class ExpenseService
         var loggedInUser = sessionData.UserId;
         if (!_groupRepo.IsUserInGroup(loggedInUser, createFullExpense.Expense.GroupId))
             throw new AuthenticationException();
-        
+
         if (!createFullExpense.UserIdsOnExpense.Contains(loggedInUser)) throw new AuthenticationException();
-        
+
         createFullExpense.Expense.UserId = loggedInUser;
-        
+
         var responseExpense = _expenseRepo.CreateExpense(createFullExpense.Expense);
 
+        var userList = AddUsersOnExpense(responseExpense.Id, createFullExpense);
+
+        var usersOnExpense = _expenseRepo.AddUsersToExpense(userList);
+
+        var fullExpense = new FullExpense()
+        {
+            Expense = responseExpense,
+            UsersOnExpense = usersOnExpense!,
+            LoggedInUser = sessionData.UserId
+        };
+        return fullExpense;
+    }
+
+    private List<CreateUserOnExpense> AddUsersOnExpense(int expenseId, CreateFullExpense createFullExpense)
+    {
         // Fordeling af expense amount ud på antal brugere
         var numberOfUsers = createFullExpense.UserIdsOnExpense.Count();
         var share = createFullExpense.Expense.Amount / numberOfUsers;
@@ -45,8 +63,8 @@ public class ExpenseService
                 var user = new CreateUserOnExpense()
                 {
                     Amount = (share * numberOfUsers) - share,
-                    ExpenseId = responseExpense.Id,
-                    UserId = u
+                    ExpenseId = expenseId,
+                    UserId = u,
                 };
                 userList.Add(user);
             }
@@ -55,15 +73,48 @@ public class ExpenseService
                 var user = new CreateUserOnExpense()
                 {
                     Amount = share * -1,
-                    ExpenseId = responseExpense.Id,
-                    UserId = u
+                    ExpenseId = expenseId,
+                    UserId = u,
                 };
                 userList.Add(user);
             }
         }
 
-        var usersOnExpense = _expenseRepo.AddUsersToExpense(userList);
+        return userList;
+    }
 
+    public FullExpense CreateSettle(int groupId, Transaction transaction, SessionData sessionData)
+    {
+        var loggedInUser = sessionData.UserId;
+        if (!_groupRepo.IsUserInGroup(loggedInUser, groupId))
+            throw new AuthenticationException();
+        
+        if (!transaction.PayerId.Equals(loggedInUser)) throw new AuthenticationException();
+
+        var createExpense = new CreateExpenseDto()
+        {
+            UserId = loggedInUser,
+            Amount = transaction.Amount * 2,
+            CreatedDate = DateTime.Now,
+            Description = $"{transaction.PayerName} paid {transaction.Amount} to {transaction.PayeeName}",
+            GroupId = groupId,
+            IsSettle = true,
+        };
+        
+        var usersOnTransaction = new List<int> {transaction.PayerId, transaction.PayeeId};
+        
+        var createFullExpense = new CreateFullExpense()
+        {
+            Expense = createExpense,
+            UserIdsOnExpense = usersOnTransaction
+        };
+        
+        var responseExpense = _expenseRepo.CreateExpense(createExpense);
+
+        var userList = AddUsersOnExpense(responseExpense.Id, createFullExpense);
+
+        var usersOnExpense = _expenseRepo.AddUsersToExpense(userList);
+        
         var fullExpense = new FullExpense()
         {
             Expense = responseExpense,
@@ -123,6 +174,17 @@ public class ExpenseService
         return _expenseRepo.GetBalances(groupId);
     }
 
+    public TotalBalanceDto GetTotalBalance(SessionData sessionData)
+    {
+        return _expenseRepo.GetTotalBalance(sessionData.UserId);
+    }
+
+    public async Task<ResponseObject> GetAvailableCurrencies()
+    {
+        return await _currencyApiRepository.GetCurrencyList();
+    }
+
+
     public IEnumerable<Transaction> GetTotalTransactions(int groupId, SessionData sessionData)
     {
         //Assert logged in user is authorized to access this group (api checked authentication)
@@ -133,5 +195,20 @@ public class ExpenseService
         return _calculator.CalculateTransActions(balances);
     }
     
+    public IEnumerable<Transaction> GetMyDebt(int groupId, SessionData sessionData)
+    {
+        var transactions = GetTotalTransactions(groupId, sessionData);
+        
+        var myDebt = new List<Transaction>();
+
+        foreach (var t in transactions)
+        {
+            if (t.PayerId == sessionData.UserId)
+            {
+                myDebt.Add(t);
+            }
+        }
+        return myDebt;
+    }
     
 }

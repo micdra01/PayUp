@@ -12,22 +12,20 @@ export class ExpensecardComponent  implements OnInit {
   isPositive: boolean | undefined
   ownShare: number | undefined
   payerImg: string | undefined
+  isSettle: boolean | undefined
 
   constructor() {
   }
 
   ngOnInit() {
     this.loggedInUser = this.expense.loggedInUser
+    this.isSettle = this.expense.expense.isSettle
     this.isPositive = this.getOweOrLent(this.loggedInUser)
     this.ownShare = this.getOwnShare(this.loggedInUser)
     this.getPayer()
   }
 
   @Input() expense!: FullExpense;
-
-  openExpense() {
-    console.log("TODO HAHahah goteeeem")
-  }
 
   getOwnShare(id: number) {
     var userOnExpense = this.expense.usersOnExpense.find((u) => u.userId === id)

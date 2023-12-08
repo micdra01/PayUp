@@ -89,7 +89,6 @@ Best regards, Alex.
     }
 
     public static string RebuildScript = @"
-DROP TABLE IF EXISTS users.expense_notifications;
 
 DROP TABLE IF EXISTS expenses.user_on_expense CASCADE;
 DROP TABLE IF EXISTS expenses.expense CASCADE;
@@ -102,7 +101,6 @@ DROP SCHEMA IF EXISTS groups CASCADE;
 
 -- Drop the 'users.password_hash' table if it exists
 DROP TABLE IF EXISTS users.password_hash;
-DROP TABLE IF EXISTS users.user_notification_settings;
 -- Drop the 'users.user' table if it exists
 DROP TABLE IF EXISTS users.user_notification_settings;
 DROP TABLE IF EXISTS users.user CASCADE;
@@ -128,14 +126,6 @@ CREATE TABLE users.password_hash (
     salt VARCHAR(180) NOT NULL,
     algorithm VARCHAR(12) NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users.user(id)
-);
-
-CREATE TABLE users.user_notification_settings (
-    user_id INT PRIMARY KEY REFERENCES users.user(id),
-    invite_notification BOOLEAN NOT NULL,
-    invite_notification_email BOOLEAN NOT NULL,
-    expense_notification BOOLEAN NOT NULL,
-    expense_notification_email BOOLEAN NOT NULL
 );
 
 -- Create the groups schema
@@ -171,6 +161,7 @@ CREATE TABLE expenses.expense (
     description VARCHAR(100) NOT NULL,
     amount MONEY NOT NULL,
     created_date TIMESTAMP NOT NULL,
+    is_settle BOOLEAN NOT NULL,
     FOREIGN KEY (group_id) REFERENCES groups.group(id),
     FOREIGN KEY (user_id) REFERENCES users.user(id)
 );
@@ -197,8 +188,13 @@ CREATE TABLE groups.group_invitation (
 	PRIMARY KEY (receiver_id, group_id)
 );
 
-
-
+CREATE TABLE users.user_notification_settings (
+    user_id INT PRIMARY KEY REFERENCES users.user(id),
+    invite_notification BOOLEAN NOT NULL,
+    invite_notification_email BOOLEAN NOT NULL,
+    expense_notification BOOLEAN NOT NULL,
+    expense_notification_email BOOLEAN NOT NULL
+);
 
  ";
 
@@ -288,10 +284,10 @@ insert into groups.group_members (user_id, group_id, owner) VALUES (1, 1, true);
 insert into groups.group_members (user_id, group_id, owner) VALUES (2, 1, false);
 insert into groups.group_members (user_id, group_id, owner) VALUES (2, 2, true);
 
-insert into expenses.expense (id, user_id, group_id, description, amount, created_date) values (1, 1, 1, 'Første omgang', 40, '2023-11-21 10:48:24.584797');
-insert into expenses.expense (id, user_id, group_id, description, amount, created_date) values (2, 1, 1, 'Bare lige en mere bajs', 40, '2023-11-21 10:48:24.584797');
-insert into expenses.expense (id, user_id, group_id, description, amount, created_date) values (3, 1, 2, 'Sidste øl', 40, '2023-11-21 10:48:24.584797');
-insert into expenses.expense (id, user_id, group_id, description, amount, created_date) values (4, 1, 2, 'ALLERSIDSTE', 40, '2023-11-21 10:48:24.584797');
+insert into expenses.expense (id, user_id, group_id, description, amount, created_date, is_settle) values (1, 1, 1, 'Første omgang', 40, '2023-11-21 10:48:24.584797', false);
+insert into expenses.expense (id, user_id, group_id, description, amount, created_date, is_settle) values (2, 1, 1, 'Bare lige en mere bajs', 40, '2023-11-21 10:48:24.584797', false);
+insert into expenses.expense (id, user_id, group_id, description, amount, created_date, is_settle) values (3, 1, 2, 'Sidste øl', 40, '2023-11-21 10:48:24.584797', false);
+insert into expenses.expense (id, user_id, group_id, description, amount, created_date, is_settle) values (4, 1, 2, 'ALLERSIDSTE', 40, '2023-11-21 10:48:24.584797', false);
 
 insert into expenses.user_on_expense (user_id, expense_id, amount) values (1, 1, 20);
 insert into expenses.user_on_expense (user_id, expense_id, amount) values (1, 2, 20);
@@ -308,11 +304,11 @@ insert into groups.group_members (user_id, group_id, owner) VALUES (1, 1, true);
 insert into groups.group_members (user_id, group_id, owner) VALUES (1, 2, true);
 insert into groups.group_members (user_id, group_id, owner) VALUES (2, 3, true);
 
-INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date) VALUES (1, 1, 'Bajere 🍺', 20, '2023-11-24T15:58:41.045Z');
+INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date, is_settle) VALUES (1, 1, 'Bajere 🍺', 20, '2023-11-24T15:58:41.045Z', false);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (1, 1, 10);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (2, 1, -10);
 
-INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date) VALUES (1, 2, 'Bajere 🍺', 20, '2023-11-24T15:58:41.045Z');
+INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date, is_settle) VALUES (1, 2, 'Bajere 🍺', 20, '2023-11-24T15:58:41.045Z', false);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (1, 2, 10);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (2, 2, -10);
     ";
@@ -327,22 +323,22 @@ insert into groups.group_members (user_id, group_id, owner) VALUES (1, 1, true);
 insert into groups.group_members (user_id, group_id, owner) VALUES (2, 1, false);
 insert into groups.group_members (user_id, group_id, owner) VALUES (3, 1, false);
 
-INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date) VALUES (1, 1, 'Bajere 🍺', 150, '2023-11-24T15:58:41.045Z');
+INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date, is_settle) VALUES (1, 1, 'Bajere 🍺', 150, '2023-11-24T15:58:41.045Z', false);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (1, 1, 100);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (2, 1, -50);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (3, 1, -50);
 
-INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date) VALUES (2, 1, 'Pizza 🍕', 240, '2023-11-24T16:58:41.045Z');
+INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date, is_settle) VALUES (2, 1, 'Pizza 🍕', 240, '2023-11-24T16:58:41.045Z', false);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (1, 2, -80);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (2, 2, 160);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (3, 2, -80);
 
-INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date) VALUES (3, 1, 'Taxa 🚕', 90, '2023-11-24T22:58:41.045Z');
+INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date, is_settle) VALUES (3, 1, 'Taxa 🚕', 90, '2023-11-24T22:58:41.045Z', false);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (1, 3, -30);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (2, 3, -30);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (3, 3, 60);
 
-INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date) VALUES (3, 1, 'Gave 🎁', 200, '2023-11-25T12:58:41.045Z');
+INSERT INTO expenses.expense (user_id, group_id, description, amount, created_date, is_settle) VALUES (3, 1, 'Gave 🎁', 200, '2023-11-25T12:58:41.045Z', false);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (2, 4, -100);
 INSERT INTO expenses.user_on_expense (user_id, expense_id, amount) VALUES (3, 4, 100);
     ";

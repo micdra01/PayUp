@@ -1,18 +1,19 @@
 import {Component, Input, numberAttribute, OnInit} from '@angular/core';
 import {
   CreateExpense,
-  CreateFullExpense,
+  CreateFullExpense, CurrencyList, currencyValue,
   FullExpense,
   Group,
   GroupService,
   UserInGroup
 } from "../../group/group.service";
-import {HttpClient} from "@angular/common/http";
-import {firstValueFrom} from "rxjs";
+
+import {firstValueFrom, last, Observable} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, Validators} from "@angular/forms";
 import {ToastController} from "@ionic/angular";
-import {reload} from "ionicons/icons";
+import {KeyValue} from "@angular/common";
+
 
 
 @Component({
@@ -21,9 +22,12 @@ import {reload} from "ionicons/icons";
   styleUrls: ['./createexpense.component.scss'],
 })
 export class CreateexpenseComponent implements OnInit {
+  protected readonly Number = Number;
   userInGroup: UserInGroup[] = [];
   id: any;
   usersOnExpense: number[] = [];
+  currencyList!: any
+  selectedCurrency: KeyValue<string, currencyValue> = {key: 'DKK', value: {code: 'DKK', value: 1}};
 
 
   constructor(
@@ -36,6 +40,7 @@ export class CreateexpenseComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.currencyList = await this.service.getCurrencies();
     await this.getId()
     this.getUsersInGroup(this.id);
   }
@@ -81,11 +86,15 @@ export class CreateexpenseComponent implements OnInit {
 
     if (this.form.invalid) return
 
+    let currency = Number(this.form.controls.amount.value!) / this.selectedCurrency.value.value;
+
     var expenseInfo: CreateExpense = {
       groupId: this.id,
       description: this.form.controls.description.value!,
-      amount: this.form.controls.amount.value!,
-      createdDate: this.form.controls.createdDate.value!
+      createdDate: this.form.controls.createdDate.value!,
+      isSettle: false,
+      amount: currency,
+
 
     };
 
@@ -110,5 +119,7 @@ export class CreateexpenseComponent implements OnInit {
       });
   }
 
-
+  async handleCurrencyChange(event: any) {
+    this.selectedCurrency = event.detail.value;
+  }
 }

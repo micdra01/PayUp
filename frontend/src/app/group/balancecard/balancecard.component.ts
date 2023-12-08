@@ -11,7 +11,7 @@ export class BalancecardComponent  implements OnInit {
   payerTransactions: Transaction[] = []
   payeeTransactions: Transaction[] = []
 
-  @Input()   transactionList: Transaction[] = []
+  @Input() transactionList: Transaction[] = []
   @Input() balance!: Balance
 
   constructor() {

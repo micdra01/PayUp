@@ -1,35 +1,42 @@
-<ion-card (click)="openExpense()">
+<ion-card>
   <ion-item>
     <ion-list class="ion-text-center" style="width: 10%">
       <ion-card-subtitle
         class="ion-text-uppercase small-text">{{expense.expense.createdDate | date: 'MMM'}}</ion-card-subtitle>
       <ion-card-title class="medium-text">{{expense.expense.createdDate | date: 'd'}}</ion-card-title>
     </ion-list>
-    <ion-icon name="receipt" color="dark" style="width: 10%"></ion-icon>
+    <ion-icon *ngIf="!isSettle" name="receipt" color="dark" style="width: 10%"></ion-icon>
+    <ion-icon *ngIf="isSettle" name="cash" color="success" style="width: 10%"></ion-icon>
     <ion-list class="ion-padding" style="width: 55%">
       <ion-card-subtitle class="small-text">
 
         <ion-thumbnail style="display: inline-block;">
-          <ion-img src="{{payerImg}}">
+          <ion-img *ngIf="!isSettle" src="{{payerImg}}">
           </ion-img>
         </ion-thumbnail>
-        <ion-label style="display: inline-block; margin-left: 2px">{{expense.expense.fullName}} paid {{expense.expense.amount}} ({{expense.usersOnExpense.length}})
+        <ion-label style="display: inline-block; margin-left: 2px" *ngIf="!isSettle">{{expense.expense.fullName}}
+          paid {{expense.expense.amount}} ({{expense.usersOnExpense.length}})
         </ion-label>
-
       </ion-card-subtitle>
       <ion-card-title class="medium-text">{{expense.expense.description}}</ion-card-title>
     </ion-list>
     <ion-list class="ion-text-end" style="width: 25%">
-      <ion-card-subtitle class="small-text" *ngIf="!isPositive && ownShare != undefined" color="danger">You owe
-      </ion-card-subtitle>
-      <ion-card-subtitle class="small-text" *ngIf="isPositive && ownShare != undefined" color="success">You lent
-      </ion-card-subtitle>
-      <ion-card-subtitle class="small-text" *ngIf="isPositive === undefined">Not involved</ion-card-subtitle>
 
-      <ion-card-title class="medium-text" *ngIf="!isPositive && ownShare != undefined"
+      <ion-card-subtitle class="small-text" *ngIf="!isSettle && !isPositive && ownShare != undefined" color="danger">You owe</ion-card-subtitle>
+      <ion-card-subtitle class="small-text" *ngIf="!isSettle && isPositive && ownShare != undefined" color="success">You lent</ion-card-subtitle>
+      <ion-card-subtitle class="small-text" *ngIf="!isSettle && isPositive === undefined">Not involved</ion-card-subtitle>
+
+      <ion-card-title class="medium-text" *ngIf="!isSettle && !isPositive && ownShare != undefined"
                       color="danger">{{-1 * ownShare}}</ion-card-title>
-      <ion-card-title class="medium-text" *ngIf="isPositive && ownShare != undefined"
+      <ion-card-title class="medium-text" *ngIf="!isSettle && isPositive && ownShare != undefined"
                       color="success">{{ownShare}}</ion-card-title>
+
+      <ion-card-subtitle class="small-text" *ngIf="isSettle && ownShare === undefined">{{expense.expense.fullName}} paid</ion-card-subtitle>
+      <ion-card-subtitle class="small-text" *ngIf="isSettle && ownShare != undefined && isPositive">You paid</ion-card-subtitle>
+      <ion-card-subtitle class="small-text" *ngIf="isSettle && ownShare != undefined && !isPositive">You got</ion-card-subtitle>
+
+      <ion-card-title class="medium-text" *ngIf="isSettle && !isPositive && ownShare != undefined">{{-1 * ownShare}}</ion-card-title>
+      <ion-card-title class="medium-text" *ngIf="isSettle && isPositive && ownShare != undefined">{{ownShare}}</ion-card-title>
     </ion-list>
   </ion-item>
 </ion-card>

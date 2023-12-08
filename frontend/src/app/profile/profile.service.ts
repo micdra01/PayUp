@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {GroupUpdate} from "../group/group.service";
+import {GroupCard, GroupUpdate} from "../group/group.service";
+import {firstValueFrom} from "rxjs";
 
 export interface FullUser {
   id: number,
@@ -22,6 +23,10 @@ export interface EditUserImg {
   imageUrl: File | null
 }
 
+export interface TotalBalanceDto {
+  amount: number
+}
+
 @Injectable()
 export class ProfileService {
   constructor(private readonly http: HttpClient,) {
@@ -29,6 +34,11 @@ export class ProfileService {
 
   getCurrentUser() {
     return this.http.get<FullUser>('http://localhost:5100/api/user/currentuser');
+  }
+
+  async getTotalBalance() {
+    const call = this.http.get<TotalBalanceDto>(environment.apiBaseUrl + "/user/totalbalance")
+    return await firstValueFrom<TotalBalanceDto>(call);
   }
 
   editCurrentUser(user: EditUserDto) {

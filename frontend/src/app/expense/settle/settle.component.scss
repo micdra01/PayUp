@@ -1,0 +1,14 @@
+.parent {
+  display: flex;
+  flex-flow: nowrap;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+}
+
+.child {
+  flex-grow: 1;
+  align-self: center;
+  margin: auto;
+
+}

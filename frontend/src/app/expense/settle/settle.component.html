@@ -1,0 +1,36 @@
+<ion-content class="parent ion-padding">
+
+  <ion-card class="child ion-padding"
+            style="overflow: hidden; border-radius: 15px; max-width: 700px; width: 90%; min-height: 300px; height: 100%;">
+
+    <div class="parent ion-padding">
+      <ion-icon class="child" name="receipt" color="dark" style="font-size: 48px"></ion-icon>
+    </div>
+
+    <!-- Add users to expense -->
+    <ion-item class="ion-padding" id="dropdow">
+      <ion-select (ionChange)="handleUserSelection($event)" multiple="false" placeholder="Choose a debt to settle"
+                  cancelText="Cancel" okText="Select">
+        <!-- Load group users -->
+        <ion-select-option *ngFor="let t of myPayerTransactions" [value]="t">You owe {{t.amount}} to {{t.payeeName}}</ion-select-option>
+        <ion-select-option disabled="true" *ngIf="myPayerTransactions.length === 0">You are all paid up!</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div class="parent">
+      <ion-card-title class="ion-padding child" *ngIf="transaction !== undefined">Are you sure you want to pay {{transaction.amount}} to {{transaction.payeeName}}?</ion-card-title>
+    </div>
+    <!-- Create Button Section -->
+    <ion-item class="parent ion-padding">
+      <ion-button class="child ion-padding" color="warning" (click)="goBack()">
+        Cancel
+      </ion-button>
+
+      <ion-button class="child ion-padding" color="warning" [disabled]="transaction === undefined" (click)="createSettle()">
+        Confirm
+      </ion-button>
+    </ion-item>
+
+
+  </ion-card>
+
+</ion-content>

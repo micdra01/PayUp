@@ -5,9 +5,7 @@
   <form [formGroup]="form">
     <!-- Logo Section -->
     <div class="parent ion-padding">
-      <ion-thumbnail class="child">
-        <ion-img id="expenseicon" src=".././assets/icon/expenseicon.png"></ion-img>
-      </ion-thumbnail>
+      <ion-icon class="child" name="receipt" color="dark" style="font-size: 48px"></ion-icon>
     </div>
 
     <!-- Expense Name Input Section -->
@@ -30,7 +28,7 @@
       </ion-modal>
     </div>
     <div *ngIf="!createdDate.touched">
-      <ion-text color="dark">* Please select a date</ion-text>
+      <ion-text class="ion-margin-start ion-padding" color="dark">* Please select a date</ion-text>
     </div>
     <div *ngIf="createdDate.touched && createdDate.invalid">
       <ion-text color="danger">Valid date is required</ion-text>
@@ -39,11 +37,17 @@
     <!-- Amount Input Section -->
     <ion-item class="ion-padding" id="paidinput">
       <ion-input formControlName="amount" label="You paid" placeholder="Enter amount" labelPlacement="floating"></ion-input>
+      <ion-select id="select" style="width: 60px" [value]="selectedCurrency" (ionChange)="handleCurrencyChange($event)">
+        <ion-select-option *ngFor="let currency of currencyList?.data | keyvalue" [value]="currency">{{currency.key}}</ion-select-option>
+        <ion-select-option [value]="selectedCurrency">DKK</ion-select-option>
+      </ion-select>
     </ion-item>
+    <ion-label class="ion-padding ion-margin-start" *ngIf="selectedCurrency.key != 'DKK'">You selected a currency other than 'DKK'.</ion-label>
+    <br>
+    <ion-label class="ion-padding ion-margin-start" *ngIf="selectedCurrency.key != 'DKK'">Calculated amount: {{(Number(amount.value) / selectedCurrency.value.value).toFixed(2) }} DKK</ion-label>
     <div *ngIf="amount.touched && amount.invalid">
       <ion-text color="danger">Valid amount is required</ion-text>
     </div>
-
 
     <!-- Add users to expense -->
     <ion-item class="ion-padding" id="dropdow">

@@ -12,6 +12,7 @@ import {NotificationComponent} from "./notification/notification.component";
 import {CreateexpenseComponent} from "./expense/createexpense/createexpense.component";
 import {AuthGuard} from "../services/AuthGuard";
 import {UpdateComponent} from "./group/update/update.component";
+import {SettleComponent} from "./expense/settle/settle.component";
 
 
 const routes: Routes = [
@@ -66,6 +67,11 @@ const routes: Routes = [
   {
     path: 'groups/:groupId/create',
     component: CreateexpenseComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'groups/:groupId/settle',
+    component: SettleComponent,
     canActivate: [AuthGuard]
   }
 ];

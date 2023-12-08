@@ -39,7 +39,8 @@ public class CreateExpense
             GroupId = groupId,
             Description = description,
             Amount = amount,
-            CreatedDate = createdDate
+            CreatedDate = createdDate,
+            IsSettle = false
         };
 
         var userIdsOnExpense = new int[]

@@ -50,4 +50,13 @@ public class Models
         public bool ExpenseNotification { get; set; }
         public bool ExpenseNotificationEmail { get; set; }
     }
+    
+    public class Transaction
+    {
+        public int PayerId { get; set; }
+        public string PayerName { get; set; }
+        public decimal Amount { get; set; }
+        public int PayeeId { get; set; }
+        public string PayeeName { get; set; }
+    }
 }

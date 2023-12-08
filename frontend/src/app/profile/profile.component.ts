@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {EditUserDto, EditUserImg, FullUser, ProfileService} from "./profile.service";
+import {EditUserDto, EditUserImg, FullUser, ProfileService, TotalBalanceDto} from "./profile.service";
 import {firstValueFrom, Observable} from "rxjs";
 import {FormBuilder, Validators} from "@angular/forms";
 import {ToastController} from "@ionic/angular";
@@ -17,6 +17,7 @@ export class ProfileComponent  implements OnInit {
   editedUser!: EditUserDto;
   imageUrl: string | ArrayBuffer | null = null;
   uploading: boolean = false;
+  totalBalance!: TotalBalanceDto;
 
   constructor(private readonly service: ProfileService,
               private readonly fb: FormBuilder,
@@ -25,7 +26,9 @@ export class ProfileComponent  implements OnInit {
   async ngOnInit() {
     this.fullUser$ = this.service.getCurrentUser();
     const user = await firstValueFrom(this.fullUser$)
+    this.totalBalance = await this.service.getTotalBalance();
     this.imageUrl = user.profileUrl;
+
   }
 
   form = this.fb.group({

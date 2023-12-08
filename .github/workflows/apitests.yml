@@ -12,6 +12,7 @@ jobs:
           fromemail: ${{secrets.fromemail}}
           frompass: ${{secrets.frompass}}
           avatarstorage: ${{secrets.avatarstorage}}
+          currencyapikey: ${{secrets.currencyapikey}}
     
     steps:
       - uses: actions/checkout@v3

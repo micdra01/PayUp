@@ -11,6 +11,7 @@ public class Expense
     public decimal Amount { get; set; }
     public DateTime CreatedDate { get; set; }
     public string? FullName { get; set; }
+    public required bool IsSettle { get; set; }
 }
 
 public class CreateExpenseDto
@@ -26,6 +27,7 @@ public class CreateExpenseDto
     public decimal Amount { get; set; }
     [Required]
     public DateTime CreatedDate { get; set; }
+    public required bool IsSettle { get; set; }
 }
 
 public class CreateUserOnExpense
@@ -64,6 +66,18 @@ public class BalanceDto
     public required decimal Amount { get; set; }
 }
 
+public class ResponseObject
+{
+    public Dictionary<string, DictionaryValue> data { get; set; }
+}
+
+public class DictionaryValue
+{
+    public string code { get; set; }
+    public double value { get; set;}
+}
+
+
 public class Transaction
 {
     public int PayerId { get; set; }
@@ -71,5 +85,10 @@ public class Transaction
     public decimal Amount { get; set; }
     public int PayeeId { get; set; }
     public string PayeeName { get; set; }
+}
 
+
+public class TotalBalanceDto
+{
+    public required decimal Amount { get; set; }
 }
