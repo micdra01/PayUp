@@ -19,7 +19,7 @@ export interface GroupCard extends Group {
 export interface UserInGroup {
   id: number,
   fullName: string,
-  imageUrl: string
+  profileUrl: string
 }
 
 export interface CreateGroup {
@@ -72,7 +72,7 @@ export interface UserOnExpense {
   imageUrl: string
 }
 
-export interface Balance {
+export interface  Balance {
   userId: number,
   fullName: string,
   imageUrl: string,

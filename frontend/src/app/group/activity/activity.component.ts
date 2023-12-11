@@ -1,5 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {Balance, FullExpense, Group, GroupService, Transaction} from "../group.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {
+  Balance,
+  FullExpense,
+  Group,
+  GroupService,
+  Transaction,
+  UserInGroup,
+} from "../group.service";
 import {firstValueFrom} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -17,6 +24,8 @@ export class ActivityComponent implements OnInit {
   subpage = 'activity';
   loading: boolean = true;
   balancesLoaded: boolean = false;
+  membersLoaded: boolean = false;
+  members: UserInGroup[] = []
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +49,12 @@ export class ActivityComponent implements OnInit {
       this.balancesLoaded = true
       this.loading = false
     }
+    if (ev.detail.value === 'members' && !this.membersLoaded) {
+      this.loading = true
+      await this.getUsersInGroup()
+      this.membersLoaded = true
+      this.loading = false
+    }
   }
 
   async getId() {
@@ -53,6 +68,10 @@ export class ActivityComponent implements OnInit {
 
   async getBalances() {
     this.balances = await this.service.getBalances(this.id)
+  }
+
+  async getUsersInGroup() {
+    this.members = await this.service.getUserInGroup(this.id)
   }
 
 
@@ -70,4 +89,5 @@ export class ActivityComponent implements OnInit {
   toInvite() {
 
   }
+
 }

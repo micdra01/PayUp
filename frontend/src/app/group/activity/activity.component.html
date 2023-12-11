@@ -37,7 +37,9 @@
 
       <div *ngSwitchCase="'members'" class="child subpage">
         <!-- TODO: ADD TOTALS HTML HERE -->
-        <p>Totals works!</p>
+        <ion-accordion-group>
+          <app-membercard *ngFor="let member of members" [member]="member"> </app-membercard>
+        </ion-accordion-group>
       </div>
     </ng-container>
 
