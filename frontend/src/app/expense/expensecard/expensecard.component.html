@@ -1,4 +1,4 @@
-<ion-card>
+<ion-card id="expense_{{expense.expense.id}}">
   <ion-item>
     <ion-list class="ion-text-center" style="width: 10%">
       <ion-card-subtitle
@@ -15,7 +15,7 @@
           </ion-img>
         </ion-thumbnail>
         <ion-label style="display: inline-block; margin-left: 2px" *ngIf="!isSettle">{{expense.expense.fullName}}
-          paid {{expense.expense.amount}} ({{expense.usersOnExpense.length}})
+          paid {{expense.expense.amount}}
         </ion-label>
       </ion-card-subtitle>
       <ion-card-title class="medium-text">{{expense.expense.description}}</ion-card-title>
@@ -40,4 +40,52 @@
     </ion-list>
   </ion-item>
 </ion-card>
+
+<ion-modal trigger="expense_{{expense.expense.id}}">
+  <ng-template>
+    <ion-card class="ion-padding parent">
+      <ion-card-header>
+        <ion-item lines="none">
+          <ion-icon name="receipt" color="dark"></ion-icon>
+          <ion-list lines="none">
+            <ion-card-subtitle class="child ion-padding-start">{{expense.expense.description}}</ion-card-subtitle>
+            <ion-card-title class="child ion-padding-start">{{expense.expense.amount}} DKK</ion-card-title>
+          </ion-list>
+        </ion-item>
+      </ion-card-header>
+      <ion-label class="ion-padding-start ion-margin-start">Created by {{expense.expense.fullName}} on {{expense.expense.createdDate | date: 'short'}}</ion-label>
+      <ion-card-content>
+        <ion-list-header><h2>Split between {{expense.usersOnExpense.length}} people</h2></ion-list-header>
+        <ion-list id="uoeList" lines="none">
+          <ion-item lines="none" *ngFor="let user of expense.usersOnExpense">
+            <ion-thumbnail class="ion-margin">
+              <ion-img src="{{user.imageUrl}}"></ion-img>
+            </ion-thumbnail>
+            <ion-label *ngIf="user.amount >= 0" color="success">{{user.fullName}} lent {{user.amount}}</ion-label>
+            <ion-label *ngIf="user.amount < 0" color="danger">{{user.fullName}} owes {{-1 * user.amount}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+
+      <ion-button [disabled]="!canDelete" id="present-alert" color="danger" class="child">
+        <ion-icon name="trash"></ion-icon>
+        <ion-alert
+          trigger="present-alert"
+          header="Are you sure you want to delete this expense?"
+          [buttons]="alertButtons"
+        ></ion-alert>
+      </ion-button>
+
+    </ion-card>
+
+    <ion-fab slot="fixed" vertical="top" horizontal="end">
+      <ion-fab-button>
+        <ion-button (click)="cancel()">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ng-template>
+</ion-modal>
 

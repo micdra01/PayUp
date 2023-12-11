@@ -44,3 +44,28 @@ ion-icon {
     --size: 1vh;
   }
 }
+
+.parent {
+  display: flex;
+  flex-flow: nowrap;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+}
+
+.child {
+  flex-grow: 1;
+  align-self: center;
+  margin: auto;
+
+}
+
+ion-modal {
+  --height: auto;
+  --width: auto;
+}
+
+#uoeList {
+  height: 30vh;
+  overflow-y: scroll
+}

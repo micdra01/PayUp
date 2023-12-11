@@ -81,5 +81,13 @@ public class ExpenseController : ControllerBase
     {
         return _service.GetTotalBalance(HttpContext.GetSessionData()!);
     }
+
+    [RequireAuthentication]
+    [HttpDelete]
+    [Route("/api/expense/delete/{expenseId}")]
+    public bool DeleteExpense([FromRoute] int expenseId)
+    {
+        return _service.DeleteExpense(expenseId, HttpContext.GetSessionData()!);
+    }
    
 }

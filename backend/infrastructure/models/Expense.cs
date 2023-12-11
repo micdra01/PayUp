@@ -42,6 +42,7 @@ public class GetUserOnExpense
     public required int UserId { get; set; }
     public required int ExpenseId { get; set; }
     public required decimal Amount { get; set; }
+    public required string FullName { get; set; }
     public required string ImageUrl { get; set; }
 }
 

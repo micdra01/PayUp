@@ -69,6 +69,7 @@ export interface UserOnExpense {
   userId: number
   expenseId: number
   amount: number
+  fullName: string
   imageUrl: string
 }
 
@@ -186,6 +187,9 @@ export class GroupService {
     return await firstValueFrom<CurrencyList>(call);
   }
 
-
+  async deleteExpense(expenseId: number) {
+    const call = this.http.delete<boolean>(environment.apiBaseUrl + "/expense/delete/" + expenseId)
+    return await firstValueFrom<boolean>(call)
+  }
 
 }
