@@ -167,7 +167,7 @@ export class GroupService {
   }
 
   invite(group_invite: GroupInvitation) {
-    return this.http.post<boolean>('http://localhost:5100/api/group/invite', group_invite);
+    return this.http.post<boolean>(environment.apiBaseUrl + '/group/invite', group_invite);
   }
 
   update(value: GroupUpdate, groupId: number) {
