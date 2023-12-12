@@ -40,7 +40,6 @@ export class CreateexpenseComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.currencyList = await this.service.getCurrencies();
     await this.getId()
     this.getUsersInGroup(this.id);
   }
@@ -68,6 +67,9 @@ export class CreateexpenseComponent implements OnInit {
     this.userInGroup.forEach((u) => this.usersOnExpense.push(u.id))
   }
 
+  async getCurrencies() {
+    this.currencyList = await this.service.getCurrencies()
+  }
 
   handleUserSelection(event: CustomEvent) {
     if (event.detail.value !== undefined) {

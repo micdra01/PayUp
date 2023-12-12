@@ -37,7 +37,7 @@
     <!-- Amount Input Section -->
     <ion-item class="ion-padding" id="paidinput">
       <ion-input formControlName="amount" label="You paid" placeholder="Enter amount" labelPlacement="floating"></ion-input>
-      <ion-select id="select" style="width: 60px" [value]="selectedCurrency" (ionChange)="handleCurrencyChange($event)">
+      <ion-select id="select" style="width: 60px" [value]="selectedCurrency" (ionFocus)="getCurrencies()" (ionChange)="handleCurrencyChange($event)">
         <ion-select-option *ngFor="let currency of currencyList?.data | keyvalue" [value]="currency">{{currency.key}}</ion-select-option>
         <ion-select-option [value]="selectedCurrency">DKK</ion-select-option>
       </ion-select>
