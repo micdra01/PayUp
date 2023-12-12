@@ -3,7 +3,7 @@ import {GroupService, GroupInvitation} from "../group.service";
 import {UserService, InvitableUser, Pagination} from "../../user/user.service";
 import {ToastController} from "@ionic/angular";
 import {firstValueFrom} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-invite',
@@ -20,7 +20,8 @@ export class InviteComponent  implements OnInit {
   constructor(private readonly group_service: GroupService,
               private readonly user_service: UserService,
               private readonly toast: ToastController,
-              private route: ActivatedRoute) {}
+              private route: ActivatedRoute,
+              private router: Router) {}
 
   ngOnInit() {
     this.group_id = Number(this.route.snapshot.paramMap.get('groupid'));
@@ -67,5 +68,9 @@ export class InviteComponent  implements OnInit {
       page_size: this.default_page_size
     }
     this.displayed_users = await firstValueFrom(this.user_service.get_invitable_users(this.search_query, pagination, this.group_id));
+  }
+
+  cancel() {
+    this.router.navigate(['/groups/'+this.group_id])
   }
 }

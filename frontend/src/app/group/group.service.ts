@@ -192,4 +192,8 @@ export class GroupService {
     return await firstValueFrom<boolean>(call)
   }
 
+  async isUserGroupOwner(groupId: number) {
+    const call = this.http.get<boolean>(environment.apiBaseUrl + "/group/" + groupId + "/owner")
+    return await firstValueFrom(call)
+  }
 }

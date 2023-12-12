@@ -26,6 +26,7 @@ export class ActivityComponent implements OnInit {
   balancesLoaded: boolean = false;
   membersLoaded: boolean = false;
   members: UserInGroup[] = []
+  isUserGroupOwner: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -52,6 +53,7 @@ export class ActivityComponent implements OnInit {
     if (ev.detail.value === 'members' && !this.membersLoaded) {
       this.loading = true
       await this.getUsersInGroup()
+      this.isUserGroupOwner = await this.service.isUserGroupOwner(this.id)
       this.membersLoaded = true
       this.loading = false
     }
@@ -74,7 +76,6 @@ export class ActivityComponent implements OnInit {
     this.members = await this.service.getUserInGroup(this.id)
   }
 
-
   async getTransactions() {
     this.transactionList = await this.service.getAllTransactions(this.id);
   }
@@ -87,7 +88,7 @@ export class ActivityComponent implements OnInit {
   }
 
   toInvite() {
-
+    this.router.navigate(['groups/'+this.group?.id+'/invite'])
   }
 
 }

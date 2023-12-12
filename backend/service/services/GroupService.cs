@@ -122,5 +122,10 @@ public class GroupService
     {
         return _groupRepo.Update(groupId, model, imageUrl);
     }
+    
+    public bool IsUserGroupOwner(int groupId, SessionData sessionData)
+    {
+        return _groupRepo.IsUserGroupOwner(groupId) == sessionData.UserId;
+    }
 
 }
