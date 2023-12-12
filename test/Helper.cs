@@ -172,7 +172,7 @@ CREATE TABLE expenses.user_on_expense (
     expense_id INT NOT NULL,
     amount MONEY NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users.user(id),
-    FOREIGN KEY (expense_id) REFERENCES expenses.expense(id),
+    FOREIGN KEY (expense_id) REFERENCES expenses.expense(id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, expense_id)
 );
 

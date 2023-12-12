@@ -69,6 +69,7 @@ export interface UserOnExpense {
   userId: number
   expenseId: number
   amount: number
+  fullName: string
   imageUrl: string
 }
 
@@ -166,7 +167,7 @@ export class GroupService {
   }
 
   invite(group_invite: GroupInvitation) {
-    return this.http.post<boolean>('http://localhost:5100/api/group/invite', group_invite);
+    return this.http.post<boolean>(environment.apiBaseUrl + '/group/invite', group_invite);
   }
 
   update(value: GroupUpdate, groupId: number) {
@@ -184,6 +185,11 @@ export class GroupService {
   async getCurrencies() {
     const call = this.http.get<CurrencyList>(environment.apiBaseUrl + "/expense/currency");
     return await firstValueFrom<CurrencyList>(call);
+  }
+
+  async deleteExpense(expenseId: number) {
+    const call = this.http.delete<boolean>(environment.apiBaseUrl + "/expense/delete/" + expenseId)
+    return await firstValueFrom<boolean>(call)
   }
 
   async isUserGroupOwner(groupId: number) {

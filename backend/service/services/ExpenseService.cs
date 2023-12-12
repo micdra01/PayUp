@@ -210,5 +210,12 @@ public class ExpenseService
         }
         return myDebt;
     }
+
+    public bool DeleteExpense(int expenseId, SessionData sessionData)
+    {
+        if (!_expenseRepo.IsUserOnExpense(expenseId, sessionData.UserId)) throw new AuthenticationException();
+
+        return _expenseRepo.DeleteExpense(expenseId);
+    }
     
 }
