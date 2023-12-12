@@ -52,7 +52,7 @@
     <ion-fab-button *ngSwitchCase="'balances'" color="warning" (click)="toCreatePayment()">
       <ion-icon name="cash" color="dark"></ion-icon>
     </ion-fab-button>
-    <ion-fab-button *ngSwitchCase="'members'" color="warning" (click)="toInvite()">
+    <ion-fab-button [disabled]="!isUserGroupOwner" *ngSwitchCase="'members'" color="warning" (click)="toInvite()">
       <ion-icon name="add" color="dark"></ion-icon>
     </ion-fab-button>
   </ion-fab>

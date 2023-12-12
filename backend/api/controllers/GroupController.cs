@@ -102,4 +102,12 @@ public class GroupController : ControllerBase
         
         return _service.Update(groupId, model, imageUrl);
     }
+    
+    [RequireAuthentication]
+    [HttpGet]
+    [Route("/api/group/{groupId}/owner")]
+    public bool IsUserGroupOwner([FromRoute] int groupId)
+    {
+        return _service.IsUserGroupOwner(groupId, HttpContext.GetSessionData());
+    }
 }
