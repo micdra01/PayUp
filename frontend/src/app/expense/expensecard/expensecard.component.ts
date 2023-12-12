@@ -1,6 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Expense, FullExpense, UserOnExpense} from "../../group/group.service";
-import {DatePipe} from "@angular/common";
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Expense, FullExpense, GroupService} from "../../group/group.service";
+import {IonModal, ToastController} from "@ionic/angular";
+import {firstValueFrom} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'expensecard',
@@ -13,8 +15,27 @@ export class ExpensecardComponent  implements OnInit {
   ownShare: number | undefined
   payerImg: string | undefined
   isSettle: boolean | undefined
+  canDelete: boolean | undefined
+  @ViewChild(IonModal) modal: IonModal | undefined;
+  public alertButtons = [
+    {
+      text: 'Cancel',
+      role: 'cancel',
+    },
+    {
+      text: 'Delete',
+      role: 'confirm',
+      handler: () => {
+        this.deleteExpense()
+      },
+    },
+  ];
 
-  constructor() {
+  constructor(
+    private route: ActivatedRoute,
+    private readonly service: GroupService,
+    private readonly toast: ToastController
+  ) {
   }
 
   ngOnInit() {
@@ -23,6 +44,7 @@ export class ExpensecardComponent  implements OnInit {
     this.isPositive = this.getOweOrLent(this.loggedInUser)
     this.ownShare = this.getOwnShare(this.loggedInUser)
     this.getPayer()
+    this.canDelete = this.canLoggedInUserDelete()
   }
 
   @Input() expense!: FullExpense;
@@ -47,4 +69,30 @@ export class ExpensecardComponent  implements OnInit {
     var userOnExpense = this.expense.usersOnExpense.find((u) => u.amount >= 0)
     this.payerImg = userOnExpense?.imageUrl
   }
+
+  cancel() {
+    this.modal!.dismiss(null, 'cancel');
+  }
+
+  async deleteExpense() {
+    const wasDeleted = this.service.deleteExpense(this.expense.expense.id)
+
+    if(await wasDeleted) {
+      (await this.toast.create({
+        message: "Your expense " + this.expense.expense.description + " was deleted",
+        color: "success",
+        duration: 5000
+      })).present()
+        .then(() => {
+          this.cancel()
+          location.reload()
+        });
+    }
+  }
+
+  canLoggedInUserDelete() {
+    return this.loggedInUser === this.expense.expense.userId
+  }
+
+
 }

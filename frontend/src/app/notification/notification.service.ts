@@ -54,7 +54,7 @@ export class NotificationService {
       accepted: isAccepted,
       groupId: groupId
     }
-      return this.http.post<boolean>('http://localhost:5100/api/user/accept-invite', group_invite);
+      return this.http.post<boolean>(environment.apiBaseUrl + '/user/accept-invite', group_invite);
     }
 
   async getNotificationSettings(): Promise<NotificationSettingsDto> {
@@ -64,7 +64,7 @@ export class NotificationService {
 
   updateUserNotificationSettings(settings: NotificationSettingsDto): Observable<boolean> {
     console.log(settings.expenseNotificationEmail);
-    return this.http.put<boolean>(`http://localhost:5100/api/user/profileinfo/settings`, settings)
+    return this.http.put<boolean>(environment.apiBaseUrl + `/user/profileinfo/settings`, settings)
 
   }
 }

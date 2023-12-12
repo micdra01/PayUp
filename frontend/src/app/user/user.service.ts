@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environment";
 
 export interface InvitableUser {
   id: number
@@ -21,7 +22,7 @@ export class UserService {
 
     let param_search = search_query == '' ? 'searchquery='+'' : 'searchquery=' + search_query + '&';
 
-    return this.http.get<InvitableUser[]>('http://localhost:5100/api/user/?'
+    return this.http.get<InvitableUser[]>(environment.apiBaseUrl + '/user/?'
       + param_search
       + 'currentpage='
       + pagination.current_page

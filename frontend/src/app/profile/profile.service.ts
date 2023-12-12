@@ -33,7 +33,7 @@ export class ProfileService {
   }
 
   getCurrentUser() {
-    return this.http.get<FullUser>('http://localhost:5100/api/user/currentuser');
+    return this.http.get<FullUser>(environment.apiBaseUrl + '/user/currentuser');
   }
 
   async getTotalBalance() {
@@ -42,7 +42,7 @@ export class ProfileService {
   }
 
   editCurrentUser(user: EditUserDto) {
-    return this.http.put<FullUser>('http://localhost:5100/api/user/profileinfo', user);
+    return this.http.put<FullUser>(environment.apiBaseUrl + '/user/profileinfo', user);
   }
 
   editUserImage(value: EditUserImg) {

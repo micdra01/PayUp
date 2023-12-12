@@ -54,6 +54,7 @@ public class ExpenseRepository
                 uoe.user_id as {nameof(GetUserOnExpense.UserId)}, 
                 expense_id as {nameof(GetUserOnExpense.ExpenseId)}, 
                 uoe.amount as {nameof(GetUserOnExpense.Amount)}, 
+                u.full_name as {nameof(GetUserOnExpense.FullName)},
                 u.profile_url as {nameof(GetUserOnExpense.ImageUrl)}
             from expenses.expense 
                 join expenses.user_on_expense as uoe on expense.id = uoe.expense_id 
@@ -186,15 +187,61 @@ public class ExpenseRepository
             from expenses.user_on_expense
             where user_id = {userId}
             group by user_id;";
-        
+
         try
         {
             using var conn = _dataSource.OpenConnection();
             return conn.QueryFirst<TotalBalanceDto>(sql);
         }
+        catch (InvalidOperationException ioe)
+        {
+            return new TotalBalanceDto()
+            {
+                Amount = 0
+            };
+        }
         catch (Exception e)
         {
             throw new SqlNullValueException(" read total balance", e);
+        }
+    }
+
+    public bool DeleteExpense(int expenseId)
+    {
+        var sql = 
+            $@"
+            DELETE FROM expenses.expense 
+            WHERE id = {@expenseId};
+            ";
+
+        try
+        {
+            using var conn = _dataSource.OpenConnection();
+            return conn.Execute(sql, new { expenseId }) == 1;
+        }
+        catch (Exception e)
+        {
+            throw new SqlNullValueException(" delete expense", e);
+        }
+    }
+
+    public bool IsUserOnExpense(int expenseId, int userId)
+    {
+        var sql =
+            @$"
+            SELECT COUNT(*) 
+            FROM expenses.expense 
+            WHERE id = {@expenseId} AND user_id = {@userId} ;
+            ";
+
+        try
+        {
+            using var conn = _dataSource.OpenConnection();
+            return conn.QueryFirst<int>(sql, new {expenseId, userId}) == 1;
+        }
+        catch (Exception e)
+        {
+            throw new SqlNullValueException(" check access", e);
         }
     }
     
