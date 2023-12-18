@@ -5,8 +5,11 @@ using infrastructure;
 using infrastructure.repository;
 using service;
 using service.services;
+using NetEscapades.AspNetCore.SecurityHeaders.Infrastructure;
+using NetEscapades.AspNetCore.SecurityHeaders.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 
 
@@ -50,6 +53,7 @@ builder.Services.AddJwtService();
 builder.Services.AddSwaggerGenWithBearerJWT();
 
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -66,15 +70,21 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(options =>
-{
-    options.SetIsOriginAllowed(origin => true)
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
-});
+var policyCollection = new HeaderPolicyCollection()
+    .AddDefaultSecurityHeaders()
+    .AddCrossOriginResourcePolicy(builder =>
+    {
+        builder.SameOrigin(); // Tillad kun anmodninger til samme oprindelse
+    })
+    .AddCustomHeader("X-Frame-Options", "DENY") // Forebyg UI-redigering fra tredjepart
+    .AddCustomHeader("X-XSS-Protection", "1; mode=block") // Aktiver XSS-beskyttelse
+    .AddCustomHeader("X-Content-Type-Options", "nosniff"); // Forhindre MIME-sniffing;
+
+
+
+//todo use cors til at lave en white list 
+app.UseSecurityHeaders(policyCollection);
 
 app.UseMiddleware<JwtBearerHandler>();
 app.UseMiddleware<GlobalExceptionHandler>();
 app.Run();
-

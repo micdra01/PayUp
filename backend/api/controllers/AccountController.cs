@@ -23,10 +23,7 @@ public class AccountController: ControllerBase
     public ResponseDto Register([FromBody] RegisterModel model)
     {
         var user = _service.Register(model);
-        return new ResponseDto
-        {
-            MessageToClient = "Successfully registered",
-        };
+        return new ResponseDto { MessageToClient = "Successfully registered", };
     }
 
     [HttpPost]

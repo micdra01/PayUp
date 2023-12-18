@@ -58,6 +58,16 @@ export class RegisterComponent implements OnInit {
 
   async register() {
 
+    let userInfo = this.createUserFromForm();
+    if (this.form.invalid) return;
+    const {any} = await firstValueFrom(this.service.register(userInfo as Registration));
+
+    const {token} = await firstValueFrom(this.service.login(this.form.value as Credentials));
+    this.token.setToken(token);
+
+    await this.NavigateToHome();
+  }
+  createUserFromForm(){
     var userInfo: Registration =
       {
         created: new Date(Date.now()),
@@ -65,25 +75,19 @@ export class RegisterComponent implements OnInit {
         fullName: this.form.controls.name.value!,
         password: this.form.controls.password.value!,
         phoneNumber: this.form.controls.phone.value!,
-        profileUrl: "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"//todo implemter når vi kan gemme billeder.
+        profileUrl: "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
       }
 
+      return userInfo;
+  }
 
-    if (this.form.invalid) return;
-    const {any} = await firstValueFrom(this.service.register(userInfo as Registration));
-
-    const {token} = await firstValueFrom(this.service.login(this.form.value as Credentials));
-    console.log("your token is:  " + token)//todo bruges kun til test burde slettes før merge med main
-    this.token.setToken(token);
-
+  async NavigateToHome() {
     await (await this.toast.create({
       message: "Welcome to PayUp!",
       color: "success",
       duration: 5000
     })).present();
-
     await this.router.navigate(['/groups'])
-
     //Refresh toolbar to show logged-in user
     this.tb.loggedInUser = await this.service.getCurrentUser()
     location.reload()

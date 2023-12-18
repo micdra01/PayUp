@@ -44,7 +44,7 @@ public class AccountService
 
     }
 
-    public User Register(RegisterModel model)//todo should have a check for if email already exists
+    public User Register(RegisterModel model)
     {
         var user = _userRepository.Create(model, DateTime.Now); //creates the user 
         if (ReferenceEquals(user, null)) throw new SqlTypeException(" Create user");
@@ -61,12 +61,9 @@ public class AccountService
         };
 
         var isCreated = _passwordHashRepository.Create(password); //stores the password
-        if (isCreated == false) throw new SqlTypeException(" Create user");
+        if (isCreated == false) throw new SqlTypeException("Could not Create user");
 
-        if (!SetNotificationSettings(user))
-        {
-            throw new SqlTypeException();
-        }
+        if (!SetNotificationSettings(user)) { throw new SqlTypeException("Could not set Notification settings"); }
         return user; 
     }
 

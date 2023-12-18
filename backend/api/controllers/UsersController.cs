@@ -27,7 +27,7 @@ public class UsersController : ControllerBase
     [RequireAuthentication]
     [HttpGet]
     [Route("/api/user/currentuser")]
-    public User GetLoggedInUser()
+    public User GetLoggedInUser()   
     {
         var data = HttpContext.GetSessionData();
         var user = _service.GetLoggedInUser(data!);

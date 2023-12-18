@@ -47,13 +47,13 @@ public class UserRepository
     public User? GetById(int userId)
     {
         var sql = @$" 
-SELECT
-    id as {nameof(User.Id)},
-    email as {nameof(User.Email)},
-    full_name as {nameof(User.FullName)},
-    phone_number as {nameof(User.PhoneNumber)},
-    created as Created,
-    profile_url as ProfileUrl
+    SELECT
+        id as {nameof(User.Id)},
+        email as {nameof(User.Email)},
+        full_name as {nameof(User.FullName)},
+        phone_number as {nameof(User.PhoneNumber)},
+        created as Created,
+        profile_url as ProfileUrl
         FROM users.user
         WHERE id = @userId;";
         
@@ -88,7 +88,7 @@ SELECT
     public User? EditUserInfo(UserInfoDto user, int id)
     {
         user.Id = id;
-        var updateSql = @$"
+        var updateSql = @$"S
         UPDATE users.user
         SET
             full_name = @{nameof(user.FullName)},
@@ -180,9 +180,9 @@ SELECT
     user_id as Id,
     full_name as FullName,
     profile_url as ProfileUrl
-FROM users.user
-JOIN groups.group_members ON users.user.id = groups.group_members.user_id
-WHERE groups.group_members.group_id = @groupId;";
+    FROM users.user
+    JOIN groups.group_members ON users.user.id = groups.group_members.user_id
+    WHERE groups.group_members.group_id = @groupId;";
         try
         {
             using var conn = _dataSource.OpenConnection();

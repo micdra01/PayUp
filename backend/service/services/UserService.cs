@@ -42,9 +42,7 @@ public class UserService
     public IEnumerable<InvitableUser> GetInvitableUsers(SessionData? data, InvitableUserSearch invitableUserSearch)
     {
         int groupOwnerId = _groupRepository.IsUserGroupOwner(invitableUserSearch.GroupId);
-
         if (groupOwnerId != data.UserId) throw new SecurityException("You are not allowed to invite users to this group");
-        
         return _userRepository.GetInvitableUsers(invitableUserSearch);
     }
     

@@ -99,7 +99,6 @@ public class GroupController : ControllerBase
             using var imageStream = image.OpenReadStream();
             imageUrl = _blobService.Save("payup", imageStream, null);
         }
-        
         return _service.Update(groupId, model, imageUrl);
     }
     
