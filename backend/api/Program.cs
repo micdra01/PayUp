@@ -56,7 +56,7 @@ var policyCollection = new HeaderPolicyCollection()
     .AddCustomHeader("X-XSS-Protection", "1; mode=block") // Aktiver XSS-beskyttelse
     .AddCustomHeader("X-Content-Type-Options", "nosniff"); // Forhindre MIME-sniffing;
 
-var allowedOrigins = new[] { "https://payup-true.web.app/" };
+var allowedOrigins = new[] { "https://payup-true.web.app" };
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
