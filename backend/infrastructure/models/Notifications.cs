@@ -14,7 +14,7 @@ public class NotificationDto
     [Required]
     public string Subject { get; set; }
     [Required]
-    public string Body { get; set; }//todo shoul be max 50 chars
+    public string Body { get; set; }
     [Required]
     public string Footer { get; set; }
     [Required]
@@ -29,7 +29,7 @@ public class GroupInviteNotification
     [Required]
     public string GroupName { get; set; }
     [Required]
-    public string GroupDescription { get; set; }//todo shoul be max 50 chars
+    public string GroupDescription { get; set; }
     [Required]
     public string SenderFullName { get; set; }
     [Required]

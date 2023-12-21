@@ -170,7 +170,6 @@ public class UserRepository
     public bool DeleteUser(int userId)
     {
         throw new NotImplementedException("not implemented in repo");
-        //todo should soft delete the user object
     }
 
     public IEnumerable<ShortUserDto> GetAllMembersOfGroup(int groupId)

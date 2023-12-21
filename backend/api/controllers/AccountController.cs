@@ -37,7 +37,7 @@ public class AccountController: ControllerBase
         return Ok(new { token });
     }
 
-    [HttpPost] //todo should take the email from body and send, and send an 200 status code if password is resend.
+    [HttpPost] 
     [Route("/api/account/recover")]
     public IActionResult RecoverAccount([FromBody] LoginModel model)
     {
