@@ -1,6 +1,6 @@
-﻿using api.models;
-using api.TransferModels;
+﻿using api.TransferModels;
 using infrastructure.dataModels;
+using infrastructure.models;
 using Microsoft.AspNetCore.Mvc;
 using service.services;
 

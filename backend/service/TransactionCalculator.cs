@@ -1,4 +1,4 @@
-﻿using api.models;
+﻿using infrastructure.models;
 
 namespace service;
 

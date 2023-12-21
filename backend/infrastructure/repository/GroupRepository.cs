@@ -1,8 +1,8 @@
 ﻿using System.Data.SqlTypes;
 using System.Security.Authentication;
-using api.models;
 using Dapper;
 using infrastructure.dataModels;
+using infrastructure.models;
 using Npgsql;
 
 namespace infrastructure.repository;

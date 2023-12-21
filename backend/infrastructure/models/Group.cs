@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace api.models;
+namespace infrastructure.models;
 
 public class Group
 {

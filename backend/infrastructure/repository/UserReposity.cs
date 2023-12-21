@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlTypes;
-using api.models;
 using Dapper;
 using infrastructure.dataModels;
+using infrastructure.models;
 using Npgsql;
 
 namespace infrastructure.repository;
@@ -88,7 +88,7 @@ public class UserRepository
     public User? EditUserInfo(UserInfoDto user, int id)
     {
         user.Id = id;
-        var updateSql = @$"S
+        var updateSql = @$"
         UPDATE users.user
         SET
             full_name = @{nameof(user.FullName)},
@@ -142,13 +142,13 @@ public class UserRepository
         invitableUserSearch.SearchQuery += "%";
         
         string sql = @"
-                    SELECT users.user.id, users.user.full_name AS FullName, users.user.profile_url AS ProfileUrl
-                    FROM users.user
-                    WHERE users.user.id NOT IN (SELECT groups.group_members.user_id FROM groups.group_members WHERE group_members.group_id = @GroupId)
-                    AND users.user.id NOT IN (SELECT groups.group_invitation.receiver_id FROM groups.group_invitation WHERE group_invitation.group_id = @GroupId)
-                    AND users.user.full_name LIKE @SearchQuery
-                    LIMIT @PageSize
-                    OFFSET @CurrentPage";
+                SELECT users.user.id, users.user.full_name AS FullName, users.user.profile_url AS ProfileUrl
+                FROM users.user
+                WHERE users.user.id NOT IN (SELECT groups.group_members.user_id FROM groups.group_members WHERE group_members.group_id = @GroupId)
+                AND users.user.id NOT IN (SELECT groups.group_invitation.receiver_id FROM groups.group_invitation WHERE group_invitation.group_id = @GroupId)
+                AND users.user.full_name LIKE @SearchQuery
+                LIMIT @PageSize
+                OFFSET @CurrentPage";
         try
         {
             using NpgsqlConnection conn = _dataSource.OpenConnection();

@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
             {
                 var server = services.GetRequiredService<IServer>();
                 var addresses = server.Features.Get<IServerAddressesFeature>()?.Addresses;
-                options.Address = addresses?.FirstOrDefault();
+                options!.Address = addresses?.FirstOrDefault();
             }
 
             return options;

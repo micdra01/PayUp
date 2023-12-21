@@ -67,7 +67,8 @@ export class InviteComponent  implements OnInit {
       current_page: this.current_page,
       page_size: this.default_page_size
     }
-    this.displayed_users = await firstValueFrom(this.user_service.get_invitable_users(this.search_query, pagination, this.group_id));
+    this.displayed_users = await firstValueFrom(
+      this.user_service.get_invitable_users(this.search_query, pagination, this.group_id));
   }
 
   cancel() {

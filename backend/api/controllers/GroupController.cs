@@ -1,6 +1,6 @@
 ﻿using api.filters;
-using api.models;
 using infrastructure.dataModels;
+using infrastructure.models;
 using Microsoft.AspNetCore.Mvc;
 using service.services;
 
@@ -53,7 +53,7 @@ public class GroupController : ControllerBase
     public IEnumerable<GroupCardModel> GetMyGroups()
     {
         var sessionData = HttpContext.GetSessionData();
-        var userId = sessionData.UserId;
+        var userId = sessionData!.UserId;
         return _service.GetMyGroups(userId);
     }
 
@@ -80,7 +80,7 @@ public class GroupController : ControllerBase
     [Route("/api/user/accept-invite")]
     public bool AcceptInvite([FromBody] GroupInviteDto inviteAnswer)
     {
-        bool success = _service.AcceptInvite(HttpContext.GetSessionData(), inviteAnswer.Accepted, inviteAnswer.GroupId);
+        bool success = _service.AcceptInvite(HttpContext.GetSessionData()!, inviteAnswer.Accepted, inviteAnswer.GroupId);
         if (success) HttpContext.Response.StatusCode = StatusCodes.Status201Created;
         return success;
     }
@@ -99,7 +99,7 @@ public class GroupController : ControllerBase
             using var imageStream = image.OpenReadStream();
             imageUrl = _blobService.Save("payup", imageStream, null);
         }
-        return _service.Update(groupId, model, imageUrl);
+        return _service.Update(groupId, model, imageUrl)!;
     }
     
     [RequireAuthentication]
@@ -107,6 +107,6 @@ public class GroupController : ControllerBase
     [Route("/api/group/{groupId}/owner")]
     public bool IsUserGroupOwner([FromRoute] int groupId)
     {
-        return _service.IsUserGroupOwner(groupId, HttpContext.GetSessionData());
+        return _service.IsUserGroupOwner(groupId, HttpContext.GetSessionData()!);
     }
 }

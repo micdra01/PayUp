@@ -4,7 +4,7 @@ using System.Security;
 using System.Security.Authentication;
 using api.TransferModels;
 
-namespace api.middelware;
+namespace api.Middleware;
 
 public class GlobalExceptionHandler
 {

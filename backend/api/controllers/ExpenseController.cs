@@ -1,10 +1,7 @@
 ﻿using api.filters;
-using api.models;
-using infrastructure.dataModels;
+using infrastructure.models;
 using Microsoft.AspNetCore.Mvc;
 using service.services;
-
-
 namespace api.controllers;
 
 [ApiController]

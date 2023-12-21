@@ -1,8 +1,8 @@
 ﻿using System.Data.SqlTypes;
 using System.Security.Authentication;
 using System.Security;
-using api.models;
 using infrastructure.dataModels;
+using infrastructure.models;
 using infrastructure.repository;
 
 namespace service.services;
@@ -10,22 +10,19 @@ namespace service.services;
 public class GroupService
 {
     private readonly GroupRepository _groupRepo;
-    private readonly ExpenseRepository _expenseRepo;
     private readonly UserRepository _userRepository;
     private readonly NotificationFacade _notificationFacade;
     private readonly NotificationRepository _notificationRepository;
 
 
 
-    public GroupService(GroupRepository groupRepo, ExpenseRepository expenseRepo, UserRepository userRepository, NotificationFacade notificationFacade,
+    public GroupService(GroupRepository groupRepo, UserRepository userRepository, NotificationFacade notificationFacade,
         NotificationRepository notificationRepository)
     {
         _groupRepo = groupRepo;
-        _expenseRepo = expenseRepo;
         _userRepository = userRepository;
         _notificationFacade = notificationFacade;
         _notificationRepository = notificationRepository;
-
     }
 
     public Group CreateGroup(CreateGroupModel group, SessionData sessionData, string? imageUrl)

@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlTypes;
 using System.Security;
-using api.models;
 using infrastructure.dataModels;
+using infrastructure.models;
 using infrastructure.repository;
 
 namespace service.services;

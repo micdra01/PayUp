@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlTypes;
 using System.Security.Authentication;
-using api.models;
 using infrastructure.dataModels;
+using infrastructure.models;
 using infrastructure.repository;
 using Microsoft.Extensions.Logging;
 using service.services.Password;
@@ -10,19 +10,15 @@ namespace service.services;
 
 public class AccountService
 {
-    private readonly ILogger<AccountService> _logger;
-
     private readonly PasswordHashRepository _passwordHashRepository;
     private readonly UserRepository _userRepository;
     private readonly NotificationRepository _notificationRepository;
 
     public AccountService(UserRepository userRepository,
-        ILogger<AccountService> logger,
         PasswordHashRepository passwordHashRepository,
         NotificationRepository notificationRepository)
     {
         _userRepository = userRepository;
-        _logger = logger;
         _passwordHashRepository = passwordHashRepository;
         _notificationRepository = notificationRepository;
     }
