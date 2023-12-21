@@ -56,7 +56,7 @@ var policyCollection = new HeaderPolicyCollection()
     .AddCustomHeader("X-XSS-Protection", "1; mode=block") // Aktiver XSS-beskyttelse
     .AddCustomHeader("X-Content-Type-Options", "nosniff"); // Forhindre MIME-sniffing;
 
-var allowedOrigins = new[] { "frontend link bro" }; // TODO tilføj urls der skal kunne tilgå vores side aka frontend
+var allowedOrigins = new[] { " http://localhost:5100" }; // TODO tilføj urls der skal kunne tilgå vores side aka frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
@@ -85,7 +85,7 @@ app.MapControllers();
 app.UseSecurityHeaders(policyCollection);
 
 app.UseCors("AllowSpecificOrigins");
-app.UseMiddleware<ProtocolWhitelistMiddleware>();
+
 app.UseMiddleware<JwtBearerHandler>();
 app.UseMiddleware<GlobalExceptionHandler>();
 app.Run();
