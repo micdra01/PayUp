@@ -39,6 +39,7 @@ export class ActivityComponent implements OnInit {
     await this.getId()
     this.group = await firstValueFrom(this.service.getGroup(this.id))
     await this.getAllExpenses()
+    this.isUserGroupOwner = await this.service.isUserGroupOwner(this.id)
     this.loading = false
   }
 
@@ -53,7 +54,6 @@ export class ActivityComponent implements OnInit {
     if (ev.detail.value === 'members' && !this.membersLoaded) {
       this.loading = true
       await this.getUsersInGroup()
-      this.isUserGroupOwner = await this.service.isUserGroupOwner(this.id)
       this.membersLoaded = true
       this.loading = false
     }
@@ -89,6 +89,10 @@ export class ActivityComponent implements OnInit {
 
   toInvite() {
     this.router.navigate(['groups/'+this.group?.id+'/invite'])
+  }
+
+  toEdit() {
+    this.router.navigate(['groups/'+this.group?.id+'/edit'])
   }
 
 }
