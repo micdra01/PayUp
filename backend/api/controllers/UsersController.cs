@@ -1,7 +1,7 @@
 ﻿using api.filters;
-using api.models;
 using api.TransferModels;
 using infrastructure.dataModels;
+using infrastructure.models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using service.services;
@@ -27,7 +27,7 @@ public class UsersController : ControllerBase
     [RequireAuthentication]
     [HttpGet]
     [Route("/api/user/currentuser")]
-    public User GetLoggedInUser()
+    public User GetLoggedInUser()   
     {
         var data = HttpContext.GetSessionData();
         var user = _service.GetLoggedInUser(data!);
@@ -98,7 +98,6 @@ public class UsersController : ControllerBase
             Pagination = pagination,
             GroupId = groupId
         };
-        
         return _service.GetInvitableUsers(data, invitableUserSearch);
     }
     

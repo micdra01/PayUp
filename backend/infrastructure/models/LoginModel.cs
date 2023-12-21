@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace api.models;
+namespace infrastructure.models;
 
 public class LoginModel
 {
-    [Required, EmailAddress] public string Email { get; set; } //todo create checks for both variables (look in Register model)
+    [Required, EmailAddress] public string Email { get; set; }
     [Required, MinLength(8)] public string Password { get; set; }
 }

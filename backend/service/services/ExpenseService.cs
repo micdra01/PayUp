@@ -1,6 +1,6 @@
 ﻿using System.Security.Authentication;
-using api.models;
 using infrastructure.dataModels;
+using infrastructure.models;
 using infrastructure.repository;
 
 namespace service.services;
@@ -9,16 +9,14 @@ public class ExpenseService
 {
     private readonly GroupRepository _groupRepo;
     private readonly ExpenseRepository _expenseRepo;
-    private readonly UserRepository _userRepository;
     private readonly CurrencyApiRepository _currencyApiRepository;
     private readonly TransactionCalculator _calculator;
 
-    public ExpenseService(GroupRepository groupRepo, ExpenseRepository expenseRepo, UserRepository userRepo, TransactionCalculator calculator, CurrencyApiRepository currencyApiRepository)
+    public ExpenseService(GroupRepository groupRepo, ExpenseRepository expenseRepo, TransactionCalculator calculator, CurrencyApiRepository currencyApiRepository)
 
     {
         _groupRepo = groupRepo;
         _expenseRepo = expenseRepo;
-        _userRepository = userRepo;
         _calculator = calculator;
         _currencyApiRepository = currencyApiRepository;
 
@@ -214,7 +212,6 @@ public class ExpenseService
     public bool DeleteExpense(int expenseId, SessionData sessionData)
     {
         if (!_expenseRepo.IsUserOnExpense(expenseId, sessionData.UserId)) throw new AuthenticationException();
-
         return _expenseRepo.DeleteExpense(expenseId);
     }
     

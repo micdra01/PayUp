@@ -1,18 +1,15 @@
 using api;
-using api.middelware;
 using api.Middleware;
 using infrastructure;
 using infrastructure.repository;
 using service;
 using service.services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 builder.Services.AddControllers();
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -49,6 +46,25 @@ builder.Services.AddSingleton<ExpenseService>();
 builder.Services.AddJwtService();
 builder.Services.AddSwaggerGenWithBearerJWT();
 
+var policyCollection = new HeaderPolicyCollection()
+    .AddDefaultSecurityHeaders()
+    .AddCrossOriginResourcePolicy(builder =>
+    {
+        builder.SameOrigin(); // Tillad kun anmodninger til samme oprindelse
+    })
+    .AddCustomHeader("X-Frame-Options", "DENY") // Forebyg UI-redigering fra tredjepart
+    .AddCustomHeader("X-XSS-Protection", "1; mode=block") // Aktiver XSS-beskyttelse
+    .AddCustomHeader("X-Content-Type-Options", "nosniff"); // Forhindre MIME-sniffing;
+
+var allowedOrigins = new[] { "https://payup-true.web.app/" };
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder => builder.WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 
 var app = builder.Build();
 
@@ -66,15 +82,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(options =>
-{
-    options.SetIsOriginAllowed(origin => true)
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
-});
+app.UseSecurityHeaders(policyCollection);
+
+app.UseCors("AllowSpecificOrigins");
 
 app.UseMiddleware<JwtBearerHandler>();
 app.UseMiddleware<GlobalExceptionHandler>();
 app.Run();
-

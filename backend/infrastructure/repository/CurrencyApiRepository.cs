@@ -1,11 +1,11 @@
 ﻿using System.Text.Json;
-using api.models;
+using infrastructure.models;
 
 namespace infrastructure.repository;
 
 public class CurrencyApiRepository
 {
-    private HttpClient _httpClient;
+    private readonly HttpClient _httpClient;
 
     public CurrencyApiRepository(HttpClient httpClient)
     {

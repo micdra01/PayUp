@@ -1,7 +1,6 @@
 ﻿using System.Data.SqlTypes;
-using api.models;
 using Dapper;
-using infrastructure.dataModels;
+using infrastructure.models;
 using Npgsql;
 
 namespace infrastructure.repository;
@@ -211,7 +210,7 @@ public class ExpenseRepository
         var sql = 
             $@"
             DELETE FROM expenses.expense 
-            WHERE id = {@expenseId};
+            WHERE id = @expenseId;
             ";
 
         try
@@ -231,7 +230,7 @@ public class ExpenseRepository
             @$"
             SELECT COUNT(*) 
             FROM expenses.expense 
-            WHERE id = {@expenseId} AND user_id = {@userId} ;
+            WHERE id = @expenseId AND user_id = @userId;
             ";
 
         try

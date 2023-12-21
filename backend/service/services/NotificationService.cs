@@ -1,13 +1,13 @@
-﻿using api.models;
-using infrastructure.dataModels;
+﻿using infrastructure.dataModels;
+using infrastructure.models;
 using infrastructure.repository;
 
 namespace service.services;
 
 public class NotificationService
 {
-    private GroupRepository _groupRepository;
-    private NotificationRepository _notificationRepository;
+    private readonly GroupRepository _groupRepository;
+    private readonly NotificationRepository _notificationRepository;
     
     public NotificationService(GroupRepository groupRepository, NotificationRepository notificationRepository)
     {

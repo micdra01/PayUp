@@ -1,4 +1,4 @@
-﻿using api.models;
+﻿using infrastructure.models;
 using infrastructure.repository;
 using MimeKit;
 
@@ -6,7 +6,7 @@ namespace service;
 
 public class NotificationFacade
 {
-    private MailRepository _mailRepository;
+    private readonly MailRepository _mailRepository;
     public NotificationFacade(MailRepository mailRepository)
     {
         _mailRepository = mailRepository;
@@ -40,7 +40,7 @@ public class NotificationFacade
             <a> " + "http://localhost:4200/" + @"
             </body>
             </html>"
-        };//todo should replace local link with our baseurl before deploying
+        };
         
         string invite = "invite";
         _mailRepository.SendInviteEmail(message, email);

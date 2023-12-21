@@ -1,12 +1,12 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using api.filters;
-using api.models;
+﻿using api.filters;
 using infrastructure.dataModels;
+using infrastructure.models;
 using Microsoft.AspNetCore.Mvc;
 using service.services;
 
 namespace api.controllers;
 
+[ApiController]
 public class NotificationController: ControllerBase
 {
     private readonly NotificationService _service;
@@ -31,7 +31,7 @@ public class NotificationController: ControllerBase
     public NotificationSettingsDto GetNotificationSettings()
     {
         SessionData? sessionData = HttpContext.GetSessionData();
-        var settings = _service.GetNotificationsSettings(sessionData.UserId);
+        var settings = _service.GetNotificationsSettings(sessionData!.UserId);
         return settings;
     }
     
@@ -41,9 +41,8 @@ public class NotificationController: ControllerBase
     [Route("/api/user/profileinfo/settings")]
     public IActionResult EditNotificationSettings([FromBody] NotificationSettingsDto settingsDto)
     {
-        Console.Write(settingsDto.ExpenseNotification + "fnwefnweofewfewfewfwee");
         SessionData? sessionData = HttpContext.GetSessionData(); 
-        settingsDto.UserId = sessionData.UserId; // Set the user ID from the session data
+        settingsDto.UserId = sessionData!.UserId; // Set the user ID from the session data
         _service.EditUserNotificationSettings(settingsDto);
         return Ok(new { Message = "Notification settings updated successfully" });
     }

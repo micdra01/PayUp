@@ -4,7 +4,7 @@ using System.Security;
 using System.Security.Authentication;
 using api.TransferModels;
 
-namespace api.middelware;
+namespace api.Middleware;
 
 public class GlobalExceptionHandler
 {
@@ -77,7 +77,7 @@ public class GlobalExceptionHandler
         }
         else if (exception is SqlTypeException)
         {
-            http.Response.StatusCode = StatusCodes.Status400BadRequest;//todo måske finde på en bedre fejl til sql fejl
+            http.Response.StatusCode = StatusCodes.Status400BadRequest;
             return http.Response.WriteAsJsonAsync(new ResponseDto { MessageToClient = exception.Message});
         }
         

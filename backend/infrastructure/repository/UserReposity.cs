@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlTypes;
-using api.models;
 using Dapper;
 using infrastructure.dataModels;
+using infrastructure.models;
 using Npgsql;
 
 namespace infrastructure.repository;
@@ -47,13 +47,13 @@ public class UserRepository
     public User? GetById(int userId)
     {
         var sql = @$" 
-SELECT
-    id as {nameof(User.Id)},
-    email as {nameof(User.Email)},
-    full_name as {nameof(User.FullName)},
-    phone_number as {nameof(User.PhoneNumber)},
-    created as Created,
-    profile_url as ProfileUrl
+    SELECT
+        id as {nameof(User.Id)},
+        email as {nameof(User.Email)},
+        full_name as {nameof(User.FullName)},
+        phone_number as {nameof(User.PhoneNumber)},
+        created as Created,
+        profile_url as ProfileUrl
         FROM users.user
         WHERE id = @userId;";
         
@@ -142,13 +142,13 @@ SELECT
         invitableUserSearch.SearchQuery += "%";
         
         string sql = @"
-                    SELECT users.user.id, users.user.full_name AS FullName, users.user.profile_url AS ProfileUrl
-                    FROM users.user
-                    WHERE users.user.id NOT IN (SELECT groups.group_members.user_id FROM groups.group_members WHERE group_members.group_id = @GroupId)
-                    AND users.user.id NOT IN (SELECT groups.group_invitation.receiver_id FROM groups.group_invitation WHERE group_invitation.group_id = @GroupId)
-                    AND users.user.full_name LIKE @SearchQuery
-                    LIMIT @PageSize
-                    OFFSET @CurrentPage";
+                SELECT users.user.id, users.user.full_name AS FullName, users.user.profile_url AS ProfileUrl
+                FROM users.user
+                WHERE users.user.id NOT IN (SELECT groups.group_members.user_id FROM groups.group_members WHERE group_members.group_id = @GroupId)
+                AND users.user.id NOT IN (SELECT groups.group_invitation.receiver_id FROM groups.group_invitation WHERE group_invitation.group_id = @GroupId)
+                AND users.user.full_name LIKE @SearchQuery
+                LIMIT @PageSize
+                OFFSET @CurrentPage";
         try
         {
             using NpgsqlConnection conn = _dataSource.OpenConnection();
@@ -170,7 +170,6 @@ SELECT
     public bool DeleteUser(int userId)
     {
         throw new NotImplementedException("not implemented in repo");
-        //todo should soft delete the user object
     }
 
     public IEnumerable<ShortUserDto> GetAllMembersOfGroup(int groupId)
@@ -180,9 +179,9 @@ SELECT
     user_id as Id,
     full_name as FullName,
     profile_url as ProfileUrl
-FROM users.user
-JOIN groups.group_members ON users.user.id = groups.group_members.user_id
-WHERE groups.group_members.group_id = @groupId;";
+    FROM users.user
+    JOIN groups.group_members ON users.user.id = groups.group_members.user_id
+    WHERE groups.group_members.group_id = @groupId;";
         try
         {
             using var conn = _dataSource.OpenConnection();

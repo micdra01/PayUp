@@ -1,6 +1,6 @@
-﻿using api.models;
-using api.TransferModels;
+﻿using api.TransferModels;
 using infrastructure.dataModels;
+using infrastructure.models;
 using Microsoft.AspNetCore.Mvc;
 using service.services;
 
@@ -23,10 +23,7 @@ public class AccountController: ControllerBase
     public ResponseDto Register([FromBody] RegisterModel model)
     {
         var user = _service.Register(model);
-        return new ResponseDto
-        {
-            MessageToClient = "Successfully registered",
-        };
+        return new ResponseDto { MessageToClient = "Successfully registered", };
     }
 
     [HttpPost]
@@ -40,7 +37,7 @@ public class AccountController: ControllerBase
         return Ok(new { token });
     }
 
-    [HttpPost] //todo should take the email from body and send, and send an 200 status code if password is resend.
+    [HttpPost] 
     [Route("/api/account/recover")]
     public IActionResult RecoverAccount([FromBody] LoginModel model)
     {

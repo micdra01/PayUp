@@ -1,6 +1,6 @@
 ﻿using System.Data.SqlTypes;
-using api.models;
 using Dapper;
+using infrastructure.models;
 using Npgsql;
 
 namespace infrastructure.repository;
