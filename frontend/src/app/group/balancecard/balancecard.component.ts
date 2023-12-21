@@ -18,7 +18,7 @@ export class BalancecardComponent  implements OnInit {
   }
 
   ngOnInit() {
-    this.filterTransActions();//todo should maybe only be done when the balance tab is pushed (a bit heavy method)
+    this.filterTransActions();
   }
 
   filterTransActions() {
